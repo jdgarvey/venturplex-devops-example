@@ -1,1 +1,16 @@
-<p>users works!</p>
+<div class="d-flex mx-5 mt-4">
+  <div class="col-6 mr-2">
+    <client-users-list [users]="users$ | async"
+                        (selected)="select($event)"
+                        (deleted)="deleteUser($event)">
+    </client-users-list>
+  </div>
+
+  <div class="col-6 ml-2">
+    <client-users-details [group]="form"
+                          [user]="user"
+                          (saved)="save($event)"
+                          (cancelled)="reset()">
+    </client-users-details>
+  </div>
+</div>

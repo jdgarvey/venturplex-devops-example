@@ -20,9 +20,7 @@ func initDB() *gorm.DB {
   db, err := gorm.Open("postgres", "host=postgres port=5432 dbname=public user=root sslmode=disable")
   db.LogMode(true)
   // Error
-  if err != nil {
-      panic(err)
-  }
+  checkErr(err, "Error on initDB")
   // Creating the table
   if !db.HasTable(&User{}) {
       db.CreateTable(&User{})
@@ -41,7 +39,6 @@ func checkErr(err error, msg string) {
 
 // Group the routes
 func main() {
-  // initDB()
   routes := gin.Default()
   routes.Use(cors.Default())
   v1 := routes.Group("api/v1")

@@ -1,0 +1,15 @@
+<mat-card>
+    <mat-card-content>
+      <h3 mat-subheader>All Employees</h3>
+      <mat-list>
+        <mat-list-item *ngFor="let user of users" class="mat-list-option" (click)="selectUser(user)">
+          <mat-icon mat-list-icon>person</mat-icon>
+          <h4 mat-line>{{user.first_name}} {{user.last_name}}</h4>
+          <button mat-icon-button color="accent" class="mat-pseudo-checkbox"
+            (click)="deleteUser(user.id, $event)">
+            <mat-icon>clear</mat-icon>
+          </button>
+        </mat-list-item>
+      </mat-list>
+    </mat-card-content>
+  </mat-card>
