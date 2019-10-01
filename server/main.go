@@ -2,6 +2,7 @@ package main
 
 import (
   "log"
+  "github.com/gin-contrib/cors"
   "github.com/gin-gonic/gin"
   "github.com/jinzhu/gorm"
   _ "github.com/jinzhu/gorm/dialects/postgres"
@@ -42,6 +43,7 @@ func checkErr(err error, msg string) {
 func main() {
   // initDB()
   routes := gin.Default()
+  routes.Use(cors.Default())
   v1 := routes.Group("api/v1")
   {
     v1.POST("/users", PostUser)
