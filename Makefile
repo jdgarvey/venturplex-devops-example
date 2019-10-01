@@ -1,5 +1,5 @@
 start: ## Builds and starts the project in a docker container
-	@docker-compose up
+	@docker-compose up --remove-orphans --build
 
 help: ## Help documentation
 	@echo "Available targets:"
