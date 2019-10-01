@@ -1,6 +1,23 @@
 version: '3.7'
 
 services:
+  client:
+    build: ./client
+    depends_on:
+      - server
+    links:
+      - server:server
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    ports:
+      - 4200:4200
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4200"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
   server:
     build: ./server
     volumes:
