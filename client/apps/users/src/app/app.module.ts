@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
+import { CoreDataModule } from '@client/core-data';
 import { MaterialModule } from '@client/material';
 import { UiToolbarModule } from '@client/ui-toolbar';
 import { RoutingModule } from './routing.module';
@@ -12,6 +13,7 @@ import { UsersComponent } from './users/users.component';
   declarations: [AppComponent, UsersComponent],
   imports: [
     BrowserModule,
+    CoreDataModule,
     MaterialModule,
     UiToolbarModule,
     RoutingModule
