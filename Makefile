@@ -10,3 +10,4 @@ build-local: ## Builds a local executable of the project via "go build"
 
 start-local: build-local ## Builds and starts a local version of the program
 	@(cd server && ./main)
+	@(cd client && yarn start)
