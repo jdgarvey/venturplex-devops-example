@@ -14,6 +14,8 @@ type User struct {
   LastName  string `gorm:"not null" form:"last_name" json:"last_name"`
 }
 
+var db = initDB()
+
 // Connect to DB
 func initDB() *gorm.DB {
   // Openning file
@@ -53,8 +55,6 @@ func main() {
 }
 
 func PostUser(ctx *gin.Context) {
-    db := initDB()
-
     var user User
     ctx.Bind(&user)
 
@@ -67,8 +67,6 @@ func PostUser(ctx *gin.Context) {
 }
 
 func GetUsers(ctx *gin.Context) {
-  db := initDB()
-
   var users []User
 
   db.Find(&users)
@@ -77,8 +75,6 @@ func GetUsers(ctx *gin.Context) {
 }
 
 func GetUser(ctx *gin.Context) {
-  db := initDB()
-
   id := ctx.Params.ByName("id")
   var user User
 
@@ -92,8 +88,6 @@ func GetUser(ctx *gin.Context) {
 }
 
 func UpdateUser(ctx *gin.Context) {
-  db := initDB()
-
   // Get id user
   id := ctx.Params.ByName("id")
   var user User
@@ -125,8 +119,6 @@ func UpdateUser(ctx *gin.Context) {
 }
 
 func DeleteUser(ctx *gin.Context) {
-  db := initDB()
-
   // Get id user
   id := ctx.Params.ByName("id")
   var user User
