@@ -1,5 +1,7 @@
-# hello-shutterfly
+# Shutterfly Stack
 The starting stack for Shutterfly devops.
+
+![image](https://user-images.githubusercontent.com/1544557/65931056-f547f000-e3bc-11e9-96c9-87de6c536ff8.png)
 
 ## Prerequisites
 The only prerequistes to development are [make](https://www.gnu.org/software/make/) and [docker](https://www.docker.com/).
