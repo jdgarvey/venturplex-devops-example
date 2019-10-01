@@ -1,6 +1,6 @@
 # Dockerfile References: https://docs.docker.com/engine/reference/builder/
 
-# Start from the latest golang base image
+# Start from the latest golang base image and alias for later
 ARG GOLANG_VERSION=latest
 
 FROM golang:$GOLANG_VERSION as builder
@@ -32,7 +32,7 @@ COPY --from=builder /app/main .
 EXPOSE 8080
 
 # Command to run the executable
-ENTRYPOINT ["./main"]
+ENTRYPOINT [ "./main" ]
 
 LABEL GOLANG_VERSION=${GOLANG_VERSION} \
-      maintainer="VenturPlex <victor.avila@venturplex.com>"
+      maintainer="VenturPlex <jon@venturplex.com>"
