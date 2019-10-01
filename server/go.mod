@@ -1,5 +1,9 @@
 module github.com/jdgarvey/hello-shutterfly
 
-go 1.13
+require (
+	github.com/gin-gonic/gin v1.4.0
+	github.com/gorilla/mux v1.6.2
+	github.com/jinzhu/gorm v1.9.11
+)
 
-require github.com/gorilla/mux v1.7.3
+go 1.13

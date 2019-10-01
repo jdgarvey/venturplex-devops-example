@@ -1,5 +1,5 @@
 start: ## Builds and starts the project in a docker container
-	@docker-compose up
+	@docker-compose up --remove-orphans --build
 
 help: ## Help documentation
 	@echo "Available targets:"
@@ -9,5 +9,4 @@ build-local: ## Builds a local executable of the project via "go build"
 	@(cd server && go build)
 
 start-local: build-local ## Builds and starts a local version of the program
-	@(cd server && ./hello-shutterfly)
-
+	@(cd server && ./main)

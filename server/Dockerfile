@@ -1,16 +1,17 @@
-# Start from the latest golang base image and alias for later
-FROM golang:latest as builder
+# Dockerfile References: https://docs.docker.com/engine/reference/builder/
 
-# Add Maintainer Info
-LABEL maintainer="VenturPlex <jon@venturplex.com>"
+# Start from the latest golang base image
+ARG GOLANG_VERSION=latest
+
+FROM golang:$GOLANG_VERSION as builder
 
 # Set the Current Working Directory inside the container
-WORKDIR /app
+WORKDIR /app/
 
 # Copy go mod and sum files
 COPY go.mod go.sum ./
 
-# Download all dependencies. Dependencies will be cached if the go.mod and go.sum files are not changed
+# Download all dependencies. Dependencies will be cached if the go.mod and go.sum files are not changes
 RUN go mod download
 
 # Copy the source from the current directory to the Working Directory inside the container
@@ -20,9 +21,7 @@ COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
 
 ######## Start a new stage from scratch #######
-FROM alpine:latest
-
-RUN apk --no-cache add ca-certificates
+FROM scratch
 
 WORKDIR /root/
 
@@ -33,4 +32,7 @@ COPY --from=builder /app/main .
 EXPOSE 8080
 
 # Command to run the executable
-ENTRYPOINT [ "./main" ]
+ENTRYPOINT ["./main"]
+
+LABEL GOLANG_VERSION=${GOLANG_VERSION} \
+      maintainer="VenturPlex <victor.avila@venturplex.com>"
