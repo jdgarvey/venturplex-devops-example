@@ -1,8 +1,7 @@
 # Start from the latest golang base image and alias for later
-FROM golang:latest as builder
-
-# Add Maintainer Info
-LABEL maintainer="VenturPlex <jon@venturplex.com>"
+ARG ALPINE_VERSION=latest
+ARG GOLANG_VERSION=latest
+FROM golang:$GOLANG_VERSION as builder
 
 # Set the Current Working Directory inside the container
 WORKDIR /app
@@ -34,3 +33,6 @@ EXPOSE 8080
 
 # Command to run the executable
 ENTRYPOINT [ "./main" ]
+
+LABEL GOLANG_VERSION=${GOLANG_VERSION} \
+      maintainer="VenturPlex <jon@venturplex.com>"
