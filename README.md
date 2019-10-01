@@ -1,7 +1,7 @@
 # VenturPlex DevOps Example
 This repo is meant to be an example of all the different facets of our DevOps approach.
 
-![image](https://user-images.githubusercontent.com/1544557/65931056-f547f000-e3bc-11e9-96c9-87de6c536ff8.png)
+![image](https://user-images.githubusercontent.com/1544557/65931426-6cca4f00-e3be-11e9-9833-0042094a5e70.png)
 
 ## Prerequisites
 The only prerequistes to development are [make](https://www.gnu.org/software/make/) and [docker](https://www.docker.com/).
