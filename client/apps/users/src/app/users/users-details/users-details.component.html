@@ -1,0 +1,33 @@
+<mat-card>
+    <mat-card-header>
+      <mat-card-title *ngIf="determineIfUpdate(); else submitRef">
+        Update {{selectedUser.first_name | titlecase}}
+      </mat-card-title>
+      <ng-template #submitRef>
+        <mat-card-title>
+          Add a User
+        </mat-card-title>
+      </ng-template>
+    </mat-card-header>
+    <form [formGroup]="group" #form="ngForm" (submit)="saveUser(group.value, form)">
+      <mat-card-content class="d-flex flex-column">
+
+        <mat-form-field appearance="outline" class="my-0 py-0">
+          <mat-label>First Name</mat-label>
+          <input matInput type="text" placeholder="Please enter a first name" formControlName="first_name">
+          <mat-error *ngIf="displayError('first_name', 'required')">Please enter a valid First Name</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="my-0 py-0">
+          <mat-label>Last Name</mat-label>
+          <input matInput type="text" placeholder="Please enter a Last Name" formControlName="last_name">
+          <mat-error *ngIf="displayError('last_name', 'required')">Please enter a valid Last Name</mat-error>
+        </mat-form-field>
+
+      </mat-card-content>
+      <mat-card-actions class="d-flex flex-row-reverse py-0 mr-2 my-0">
+        <button mat-stroked-button type="reset" color="accent" (click)="cancel()">Cancel</button>
+        <button mat-stroked-button type="submit" color="primary">{{determineIfUpdate() ? 'Update' : 'Submit'}}</button>
+      </mat-card-actions>
+    </form>
+  </mat-card>

@@ -1,0 +1,25 @@
+<!-- Toolbar -->
+<mat-toolbar color="primary" class="mat-elevation-z5">
+  <div class="d-flex flex-grow-1">
+    <button mat-stroked-button (click)="sidenav.toggle()" color="accent">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <span class="ml-2 mt-1">{{title | titlecase}}</span>
+  </div>
+</mat-toolbar>
+
+<!-- Sidenav -->
+<mat-sidenav-container>
+  <mat-sidenav #sidenav mode="side" class="mat-elevation-z5">
+    <nav>
+      <a mat-button class="nav-link" *ngFor="let link of links" [routerLink]="link.path" routerLinkActive="active">
+        <mat-icon>
+          {{link.icon}}
+        </mat-icon>
+        {{link.label}}
+      </a>
+    </nav>
+  </mat-sidenav>
+
+  <router-outlet></router-outlet>
+</mat-sidenav-container>

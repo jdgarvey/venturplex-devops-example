@@ -1,0 +1,30 @@
+/* You can add global styles to this file, and also import other style files */
+@import '~bootstrap-utilities';
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+$columns: 12;
+
+@for $i from 1 through $columns {
+  .col-#{$i} {
+    @extend .col;
+    flex: 0 1 percentage($number: $i / $columns) !important;
+  }
+}
+
+.container {
+  display: flex;
+  margin: 10px;
+  flex-wrap: wrap;
+  [class*='col'] {
+    padding: 10px;
+    flex: 1 !important;
+  }
+}
+
+.col {
+  box-sizing: border-box;
+}

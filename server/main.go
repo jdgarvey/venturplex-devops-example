@@ -1,98 +1,136 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
-	"io/ioutil"
-	"log"
-	"net/http"
-
-	"github.com/gorilla/mux"
+  "log"
+  "github.com/gin-contrib/cors"
+  "github.com/gin-gonic/gin"
+  "github.com/jinzhu/gorm"
+  _ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
-type event struct {
-	ID          string `json:"ID"`
-	Title       string `json:"Title"`
-	Description string `json:"Description"`
+type User struct {
+  Id        int    `gorm:"AUTO_INCREMENT" form:"id" json:"id"`
+  FirstName string `gorm:"not null" form:"first_name" json:"first_name"`
+  LastName  string `gorm:"not null" form:"last_name" json:"last_name"`
 }
 
-type allEvents []event
+var db = initDB()
 
-var events = allEvents{
-	{
-		ID:          "1",
-		Title:       "Hello Shutterfly!",
-		Description: "Ipsum reprehenderit consectetur do commodo ea cupidatat magna non anim culpa culpa irure occaecat.",
-	},
+// Connect to DB
+func initDB() *gorm.DB {
+  // Openning file
+  db, err := gorm.Open("postgres", "host=postgres port=5432 dbname=public user=root sslmode=disable")
+  db.LogMode(true)
+  // Error
+  checkErr(err, "Error on initDB")
+  // Creating the table
+  if !db.HasTable(&User{}) {
+      db.CreateTable(&User{})
+      db.Set("gorm:table_options", "ENGINE=InnoDB").CreateTable(&User{})
+  }
+
+  return db
 }
 
-func createEvent(w http.ResponseWriter, r *http.Request) {
-	var newEvent event
-	reqBody, err := ioutil.ReadAll(r.Body)
+// Log errors
+func checkErr(err error, msg string) {
 	if err != nil {
-		fmt.Fprintf(w, "Please make sure the title and description are filled out")
-	}
-	json.Unmarshal(reqBody, &newEvent)
-	events = append(events, newEvent)
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(newEvent)
-}
-
-func updateEvent(w http.ResponseWriter, r *http.Request) {
-	eventID := mux.Vars(r)["id"]
-	var updatedEvent event
-	reqBody, err := ioutil.ReadAll(r.Body)
-
-	if err != nil {
-		fmt.Fprintf(w, "Please make sure the title and description are filled out")
-	}
-
-	json.Unmarshal(reqBody, &updatedEvent)
-
-	for i, singleEvent := range events {
-		if singleEvent.ID == eventID {
-			singleEvent.Title = updatedEvent.Title
-			singleEvent.Description = updatedEvent.Description
-			events = append(events[:i], singleEvent)
-			json.NewEncoder(w).Encode(singleEvent)
-		}
+		log.Fatalln(msg, err)
 	}
 }
 
-func deleteEvent(w http.ResponseWriter, r *http.Request) {
-	eventID := mux.Vars(r)["id"]
-	for i, singleEvent := range events {
-		if singleEvent.ID == eventID {
-			events = append(events[:i], events[i+1:]...)
-			fmt.Fprintf(w, "The event with ID %v has been deleted", eventID)
-		}
-	}
-}
-
-func getOneEvent(w http.ResponseWriter, r *http.Request) {
-	eventID := mux.Vars(r)["id"]
-	for _, singleEvent := range events {
-		if singleEvent.ID == eventID {
-			json.NewEncoder(w).Encode(singleEvent)
-		}
-	}
-}
-
-func getAllEvents(w http.ResponseWriter, r *http.Request) {
-	json.NewEncoder(w).Encode(events)
-}
-
-func homeLink(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Welcome Home!")
-}
-
+// Group the routes
 func main() {
-	router := mux.NewRouter().StrictSlash(true)
-	router.HandleFunc("/", homeLink)
-	router.HandleFunc("/events", getAllEvents).Methods("GET")
-	router.HandleFunc("/events/{id}", getOneEvent).Methods("GET")
-	router.HandleFunc("/event", createEvent).Methods("POST")
-	router.HandleFunc("/events/{id}", updateEvent).Methods("PATCH")
-	router.HandleFunc("/events/{id}", deleteEvent).Methods("DELETE")
-	log.Fatal(http.ListenAndServe(":8080", router))
+  routes := gin.Default()
+  routes.Use(cors.Default())
+  v1 := routes.Group("api/v1")
+  {
+    v1.POST("/users", PostUser)
+    v1.GET("/users", GetUsers)
+    v1.GET("/users/:id", GetUser)
+    v1.PUT("/users/:id", UpdateUser)
+    v1.DELETE("/users/:id", DeleteUser)
+  }
+  routes.Run(":8080")
+}
+
+func PostUser(ctx *gin.Context) {
+    var user User
+    ctx.Bind(&user)
+
+    if user.FirstName != "" && user.LastName != "" {
+      db.Create(&user)
+      ctx.JSON(201, gin.H{"success": user})
+    } else {
+      ctx.JSON(422, gin.H{"error": "Fields are empty"})
+    }
+}
+
+func GetUsers(ctx *gin.Context) {
+  var users []User
+
+  db.Find(&users)
+
+  ctx.JSON(200, users)
+}
+
+func GetUser(ctx *gin.Context) {
+  id := ctx.Params.ByName("id")
+  var user User
+
+  db.First(&user, id)
+
+  if user.Id != 0 {
+      ctx.JSON(200, user)
+  } else {
+      ctx.JSON(404, gin.H{"error": "User not found"})
+  }
+}
+
+func UpdateUser(ctx *gin.Context) {
+  // Get id user
+  id := ctx.Params.ByName("id")
+  var user User
+
+  db.First(&user, id)
+
+  if user.FirstName != "" && user.LastName != "" {
+      if user.Id != 0 {
+          var newUser User
+          ctx.Bind(&newUser)
+
+          result := User{
+              Id:        user.Id,
+              FirstName: newUser.FirstName,
+              LastName:  newUser.LastName,
+          }
+
+          // UPDATE users SET firstname='newUser.Firstname', lastname='newUser.Lastname' WHERE id = user.Id;
+          db.Save(&result)
+
+          ctx.JSON(200, gin.H{"success": result})
+      } else {
+          ctx.JSON(404, gin.H{"error": "User not found"})
+      }
+
+  } else {
+      ctx.JSON(422, gin.H{"error": "Fields are empty"})
+  }
+}
+
+func DeleteUser(ctx *gin.Context) {
+  // Get id user
+  id := ctx.Params.ByName("id")
+  var user User
+
+  db.First(&user, id)
+
+  if user.Id != 0 {
+      // DELETE FROM users WHERE id = user.Id
+      db.Delete(&user)
+
+      ctx.JSON(200, gin.H{"success": "User #" + id + " deleted"})
+  } else {
+      ctx.JSON(404, gin.H{"error": "User not found"})
+  }
 }
