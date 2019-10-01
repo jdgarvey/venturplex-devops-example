@@ -1,11 +1,11 @@
 <mat-card>
     <mat-card-header>
       <mat-card-title *ngIf="determineIfUpdate(); else submitRef">
-        Update {{selectedUser.first_name | titlecase}}'s Contact
+        Update {{selectedUser.first_name | titlecase}}
       </mat-card-title>
       <ng-template #submitRef>
         <mat-card-title>
-          Add a contact
+          Add a User
         </mat-card-title>
       </ng-template>
     </mat-card-header>
