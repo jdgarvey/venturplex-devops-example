@@ -2,7 +2,7 @@
 
 This repo is meant to be an example of all the different facets of our DevOps approach.
 
-![image](https://user-images.githubusercontent.com/1544557/65931426-6cca4f00-e3be-11e9-9833-0042094a5e70.png)
+![image](https://user-images.githubusercontent.com/31123803/66063172-b2d6fe00-e4f7-11e9-8974-3bc2e0284e5b.png)
 
 ## Prerequisites
 
