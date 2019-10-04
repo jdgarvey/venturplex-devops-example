@@ -11,6 +11,7 @@ The prerequistes to development are [make](https://www.gnu.org/software/make/), 
 ## Getting Started
 ### Local Development
 For local development, ensure that a Kubernetes cluster running.
+You will also need to replace the volume path in `kubernetes/client.yaml` and `kubernetes/server.yaml` with your absolute path to the respective directories.
 Then run the following:
 ```
 make install-node-modules # Install local dependencies for the client

@@ -46,5 +46,5 @@ spec:
         - name: hot-reload-server
           hostPath:
             # Path is essentially $(cwd)/server
-            path: /Users/Garve/projects/venturplex-devops-example/server
+            path: /path/to/projects/venturplex-devops-example/server
             type: Directory

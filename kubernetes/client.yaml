@@ -43,6 +43,6 @@ spec:
       volumes:
         - name: hot-reload
           hostPath:
-            # Path is essentially $(pwd)/client
-            path: /Users/Garve/projects/venturplex-devops-example/client
+            # Path is essentially $(cwd)/client
+            path: /path/to/projects/venturplex-devops-example/client
             type: Directory
