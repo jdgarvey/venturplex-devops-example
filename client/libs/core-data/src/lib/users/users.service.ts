@@ -1,3 +1,5 @@
+/// <reference path="../../../typings.d.ts" />
+
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
@@ -5,7 +7,7 @@ import { Observable } from 'rxjs';
 
 import { User } from './user.model';
 
-const BASE_URL = 'http://localhost:8080/api/v1';
+const BASE_URL = `${process.env.ENDPOINT}/api/v1`;
 const model = 'users';
 
 @Injectable({

@@ -6,7 +6,32 @@ This repo is meant to be an example of all the different facets of our DevOps ap
 
 ## Prerequisites
 
-The only prerequistes to development are [make](https://www.gnu.org/software/make/) and [docker](https://www.docker.com/).
+The prerequistes to development are [make](https://www.gnu.org/software/make/), [docker](https://www.docker.com/), and [kubernetes](https://kubernetes.io/). Kubernetes actually comes with Docker, and can be enabled through Docker preferences.
+
+## Getting Started
+### Local Development
+For local development, ensure that a Kubernetes cluster running.
+Then run the following:
+```
+make install-node-modules # Install local dependencies for the client
+make build-dev-images # Build docker images – only run this one time, or when a dockerfile gets changed
+make build-dev-k8s # Create Kubernetes infrastructure
+```
+
+The frontend is available on http://localhost:31000 and the backend is available on http://localhost:31001.
+Both the frontend and backend have live-reload enabled.
+
+### Release Builds
+For multi-stage release build, run the following:
+```
+make build-release-images # This actually compiles code, so it needs to be run every time there is a release build
+make build-release-k8s # Create Kubernetes infrastructure
+```
+
+The frontend is available on http://localhost:31002 and the backend is available on http://localhost:31003.
+
+### Troubleshooting
+If for some reason the backend does not boot properly or live-reload does not work off the bat, recreate the dev k8s by running `make destroy-all-k8s` and then `make build-dev-k8s`.
 
 ## Client
 
@@ -41,8 +66,18 @@ To start the server, run `make start`. This will build the Go files and run the 
 ## Available Make Commands
 
 ```bash
+build-all-images               Builds all docker images based on docker-compose.yml
+build-all-k8s                  Builds all deployments and services
+build-data-k8s                 Creates the database deployment and service
+build-dev-images               Builds the docker development images based on docker-compose.yml
+build-dev-k8s                  Creates development-specific deployments and services
+build-k8s-infrastructure       Creates the local Kubernetes architecture
+build-k8s-namespace            Creates a Kubernetes workspace
 build-local                    Builds a local executable of the project via "go build"
+build-release-images           Builds the docker release images based on docker-compose.yml
+build-release-k8s              Creates release-specific deployments and services
+destroy-all-k8s                Deletes the local Kubernetes architecture
 help                           Help documentation
+install-node-modules           Install dependencies locally
 start-local                    Builds and starts a local version of the program
-start                          Builds and starts the project in a docker container
 ```

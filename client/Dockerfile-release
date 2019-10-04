@@ -1,0 +1,27 @@
+# Build the base image from the source code
+FROM node:10-alpine as build
+
+WORKDIR /app
+
+COPY package.json yarn.lock ./
+RUN yarn
+
+COPY . .
+
+ARG ENDPOINT=http://localhost:31003
+
+RUN echo "Building release image" && \
+  ENDPOINT=$ENDPOINT yarn build --configuration=production
+
+# Create the final image
+FROM nginx:1.17.3-alpine
+EXPOSE 80
+
+# Copy the default files
+COPY rootfs/ /
+
+# This is the default nginx location for files
+WORKDIR /usr/share/nginx/html
+
+# Copy the dist folder contents for the portal into the WORKDIR
+COPY --from=build /app/dist/apps/users .

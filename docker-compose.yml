@@ -1,54 +1,27 @@
+# This file is only used to build images.
+# Kubernetes is used to actually run the containers.
+
 version: '3.7'
 
 services:
   client:
     build: ./client
-    depends_on:
-      - server
-    links:
-      - server:server
-    volumes:
-      - ./client:/app
-      - /app/node_modules
-    ports:
-      - 4200:4200
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:4200"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+    image: vp/client:latest
+
+  client-release:
+    build:
+      context: './client'
+      dockerfile: Dockerfile-release
+      args:
+        ENDPOINT: http://localhost:31003
+    image: vp/client-release:latest
 
   server:
     build: ./server
-    volumes:
-      - ./server:/app/
-    ports:
-      - 8080:8080
-    depends_on:
-      - postgres
-    links:
-      - postgres:postgres
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/api/v1"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+    image: vp/server:latest
 
-  postgres:
-    image: postgres:alpine
-    restart: always
-    environment:
-      POSTGRES_DB: public
-      POSTGRES_USER: root
-    healthcheck:
-      test: ['CMD-SHELL', "pg_isready --dbname public --username=root"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    ports:
-      - 5432:5432
-    volumes:
-      - postgres:/var/lib/postgresql/data
-
-volumes:
-  postgres:
+  server-release:
+    build:
+      context: ./server
+      dockerfile: Dockerfile-release
+    image: vp/server-release:latest

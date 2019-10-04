@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: server-release
+  namespace: venturplex-devops-example
+spec:
+  type: NodePort
+  selector:
+    app: server-release
+  ports:
+    - protocol: TCP
+      port: 8080
+      nodePort: 31003
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server-release
+  namespace: venturplex-devops-example
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: server-release
+  template:
+    metadata:
+      labels:
+        app: server-release
+        version: v1
+    spec:
+      hostAliases:
+        - ip: "127.0.0.1"
+          hostnames:
+            - "server-release"
+      containers:
+        - name: server
+          image: vp/server-release:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080

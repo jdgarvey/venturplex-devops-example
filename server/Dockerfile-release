@@ -17,6 +17,17 @@ RUN go mod download
 # Copy the source from the current directory to the Working Directory inside the container
 COPY . .
 
-RUN ["go", "get", "github.com/go-playground/justdoit"]
+# Build the Go app
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
 
-ENTRYPOINT justdoit -watch="./" -include="(.+\\.go|.+\\.c)$" -build="go build -o main ." -run="./main"
+######## Start a new stage from scratch #######
+FROM scratch
+
+# Command to run the executable
+ENTRYPOINT [ "/main" ]
+
+LABEL GOLANG_VERSION=${GOLANG_VERSION} \
+  maintainer="VenturPlex <jon@venturplex.com>"
+
+# Copy the Pre-built binary file from the previous stage
+COPY --from=builder /app/main /
