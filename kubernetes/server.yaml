@@ -5,13 +5,13 @@ metadata:
   name: server
   namespace: venturplex-devops-example
 spec:
-  type: NodePort
+  type: LoadBalancer
   selector:
     app: server
   ports:
     - protocol: TCP
+      targetPort: api
       port: 8080
-      nodePort: 31001
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -29,19 +29,16 @@ spec:
         app: server
         version: v1
     spec:
-      hostAliases:
-        - ip: "127.0.0.1"
-          hostnames:
-            - "server"
       containers:
         - name: server
-          image: vp/server:latest
+          image: venturplex/server:latest
+          imagePullPolicy: Never
           volumeMounts:
             - mountPath: /app
               name: hot-reload-server
-          imagePullPolicy: Never
           ports:
-            - containerPort: 8080
+            - name: api
+              containerPort: 8080
       volumes:
         - name: hot-reload-server
           hostPath:

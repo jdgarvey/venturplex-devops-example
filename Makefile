@@ -15,13 +15,16 @@ start-local: build-local ## Builds and starts a local version of the program
 build-dev-images: ## Builds the docker development images based on docker-compose.yml
 	@(docker-compose build --parallel client server)
 
+push-release-images: ## Pushes built release images to docker hub
+	@(docker-compose push client-release server-release)
+
 build-release-images: ## Builds the docker release images based on docker-compose.yml
 	@(docker-compose build --parallel client-release server-release)
 
 build-all-images: build-dev-images build-release-images ## Builds all docker images based on docker-compose.yml
 
 build-k8s-namespace: ## Creates a Kubernetes workspace
-	@(kubectl apply -f ./kubernetes/namespace.yaml)
+	@(kubectl apply -f ./kubernetes/namespace.yaml && kubectl config set-context --current --namespace=venturplex-devops-example)
 
 build-k8s-infrastructure: build-k8s-namespace ## Creates the local Kubernetes architecture
 	@(kubectl apply -f ./kubernetes)

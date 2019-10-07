@@ -4,13 +4,13 @@ metadata:
   name: client
   namespace: venturplex-devops-example
 spec:
-  type: NodePort
+  type: LoadBalancer
   selector:
     app: client
   ports:
     - protocol: TCP
+      targetPort: frontend
       port: 4200
-      nodePort: 31000
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -30,16 +30,14 @@ spec:
     spec:
       containers:
         - name: client
-          env:
-            - name: ENDPOINT
-              value: http://localhost:31001
-          image: vp/client:latest
+          image: venturplex/client:latest
           imagePullPolicy: Never
           volumeMounts:
             - mountPath: /app
               name: hot-reload
           ports:
-            - containerPort: 4200
+            - name: frontend
+              containerPort: 4200
       volumes:
         - name: hot-reload
           hostPath:

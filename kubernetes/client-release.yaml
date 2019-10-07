@@ -4,13 +4,13 @@ metadata:
   name: client-release
   namespace: venturplex-devops-example
 spec:
-  type: NodePort
+  type: LoadBalancer
   selector:
     app: client-release
   ports:
     - protocol: TCP
+      targetPort: frontend
       port: 80
-      nodePort: 31002
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
         - name: client-release
-          image: vp/client-release:latest
-          imagePullPolicy: Never
+          image: venturplex/client-release:latest
           ports:
-            - containerPort: 80
+            - name: frontend
+              containerPort: 80

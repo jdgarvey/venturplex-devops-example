@@ -9,6 +9,7 @@ spec:
     version: v1
   ports:
     - protocol: TCP
+      targetPort: db
       port: 5432
 ---
 apiVersion: apps/v1
@@ -27,10 +28,6 @@ spec:
         app: data-pipeline
         version: v1
     spec:
-      hostAliases:
-        - ip: "127.0.0.1"
-          hostnames:
-            - "postgres"
       containers:
         - name: postgres
           env:
@@ -42,6 +39,9 @@ spec:
           volumeMounts:
             - name: db-data
               mountPath: /var/lib/postgresql/data
+          ports:
+            - name: db
+              containerPort: 5432
       volumes:
         - name: db-data
           emptyDir: {}
