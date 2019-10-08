@@ -12,8 +12,6 @@ services:
     build:
       context: './client'
       dockerfile: Dockerfile-release
-      args:
-        ENDPOINT: http://localhost:31003
     image: venturplex/client-release:latest
 
   server:

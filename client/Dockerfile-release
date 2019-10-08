@@ -11,11 +11,10 @@ RUN yarn
 
 COPY . .
 
-ARG ENDPOINT=http://localhost:31003
+ARG ENDPOINT
 
-RUN echo "Building release image" && \
+RUN echo "Building release image with endpoint: ${ENDPOINT}" && \
   ENDPOINT=$ENDPOINT yarn build --configuration=production
-
 
 # Create the final image
 FROM nginx:${NGINX_VERSION}

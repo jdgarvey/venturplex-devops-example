@@ -38,6 +38,9 @@ spec:
           ports:
             - name: frontend
               containerPort: 4200
+          env:
+            - name: ENDPOINT
+              value: http://localhost
       volumes:
         - name: hot-reload
           hostPath:

@@ -7,8 +7,7 @@ import { Observable } from 'rxjs';
 
 import { User } from './user.model';
 
-// const BASE_URL = `${process.env.ENDPOINT}:8080/api/v1`;
-const BASE_URL = `http://ade38dec3e93a11e991f20a957bcd771-752365677.us-west-2.elb.amazonaws.com:8080/api/v1`;
+const BASE_URL = `${process.env.ENDPOINT}:8080/api/v1`;
 const model = 'users';
 
 @Injectable({
