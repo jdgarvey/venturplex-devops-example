@@ -6,22 +6,20 @@ version: '3.7'
 services:
   client:
     build: ./client
-    image: vp/client:latest
+    image: venturplex/client:latest
 
   client-release:
     build:
       context: './client'
       dockerfile: Dockerfile-release
-      args:
-        ENDPOINT: http://localhost:31003
-    image: vp/client-release:latest
+    image: venturplex/client-release:latest
 
   server:
     build: ./server
-    image: vp/server:latest
+    image: venturplex/server:latest
 
   server-release:
     build:
       context: ./server
       dockerfile: Dockerfile-release
-    image: vp/server-release:latest
+    image: venturplex/server-release:latest

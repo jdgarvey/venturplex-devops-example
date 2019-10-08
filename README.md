@@ -12,6 +12,11 @@ Kubernetes actually comes with Docker, and can be enabled through Docker prefere
 
 ## Getting Started
 
+Once all prerequisites are installed, run `make init` to download other necessary tools for development on MacOS.
+
+If the AWS CLI has never been installed on your machine before,
+make sure to [configure](https://docs.aws.amazon.com/eks/latest/userguide/getting-started-eksctl.html#configure-awscli) it.
+
 ### Local Development
 
 For local development, ensure that a Kubernetes cluster running.
@@ -23,25 +28,32 @@ Then run the following:
 
 ```bash
 make install-node-modules # Install local dependencies for the client
-make build-dev-images # Build docker images – only run this once, or when a dockerfile gets changed
-make build-dev-k8s # Create Kubernetes infrastructure
+make deploy-dev # Build dev images and create dev Kubernetes infrastructure
 ```
 
-The frontend is available on [http://localhost:31000](http://localhost:31000)
-and the backend is available on [http://localhost:31001](http://localhost:31001).
+> Note: `make install-node-modules` only needs to be run once initially,
+> and then it only needs to be run if client/package.json changes.
+
+The frontend is available on [http://localhost:4200](http://localhost:4200)
+and the backend is available on [http://localhost:8080](http://localhost:8080).
 Both the frontend and backend have live-reload enabled.
 
 ### Release Builds
 
-For multi-stage release build, run the following:
+The app is deployed to [AWS EKS](https://aws.amazon.com/eks/).
 
-```bash
-make build-release-images # This actually compiles code, so it needs to be run every time there is a release build
-make build-release-k8s # Create Kubernetes infrastructure
-```
+To deploy your own cluster, make sure that the AWS CLI is installed,
+then run `make create-cluster` to create a cluster on EKS.
 
-The frontend is available on [http://localhost:31002](http://localhost:31002)
-and the backend is available on [http://localhost:31003](http://localhost:31003).
+For multi-stage release build, run `make deploy-release`.
+This will build the release images, push them to Docker Hub, and deploy the Kubernetes infrastructure.
+
+**On a local cluster**
+The frontend is available on [http://localhost:4200](http://localhost:4200)
+and the backend is available on [http://localhost:8080](http://localhost:8080).
+
+**On a remote cluster**
+Run `make get-client-host` and `make get-server-host` to get the host names for the client and server respectively.
 
 ### Troubleshooting
 
@@ -86,19 +98,30 @@ The docker portion is contained in `docker-compose.yml` and `server/Dockerfile`.
 
 ## Available Make Commands
 
+Below are all the available Make targets (copied from running `make help`).
+
 ```bash
-build-all-images               Builds all docker images based on docker-compose.yml
-build-all-k8s                  Builds all deployments and services
-build-data-k8s                 Creates the database deployment and service
+build-client-release-image     Builds the release-ready docker image for the client
 build-dev-images               Builds the docker development images based on docker-compose.yml
-build-dev-k8s                  Creates development-specific deployments and services
-build-k8s-infrastructure       Creates the local Kubernetes architecture
-build-k8s-namespace            Creates a Kubernetes workspace
 build-local                    Builds a local executable of the project via "go build"
-build-release-images           Builds the docker release images based on docker-compose.yml
-build-release-k8s              Creates release-specific deployments and services
+build-server-release-image     Builds the release-ready docker image for the server
+create-cluster                 Creates and configures a cluster on EKS
+deploy-client-release          Creates the k8s deployment and service for the release version of the client
+deploy-data                    Creates the k8s database deployment and service
+deploy-dev-client              Creates the k8s dev cient deployment and service
+deploy-dev-server              Creates the k8s dev server deployment and service
+deploy-dev                     Creates development-specific deployments and services
+deploy-namespace               Creates a Kubernetes workspace
+deploy-release                 Builds all images and deploys all k8s infrastructure for a release
+deploy-server-release          Creates the k8s deployment and service for the release version of the server
 destroy-all-k8s                Deletes the local Kubernetes architecture
+get-client-hostname            Retrieve the external IP for the client application
+get-server-hostname            Retrieve the external IP for the server application
 help                           Help documentation
+init                           Install required tools for local environment on macOS
 install-node-modules           Install dependencies locally
+local-k8s-context              Ensures that the K8s context is set to Docker for Desktop
+push-client-release            Push the built client-release image to Docker Hub
+push-server-release            Push the built server-release image to Docker Hub
 start-local                    Builds and starts a local version of the program
 ```
