@@ -27,7 +27,8 @@ data "aws_availability_zones" "available" {
 }
 
 locals {
-  cluster_name = "test-eks-${random_string.suffix.result}"
+  app_prefix   = "vp-devops-example"
+  cluster_name = "${local.app_prefix}-${random_string.suffix.result}"
 }
 
 resource "random_string" "suffix" {
@@ -86,7 +87,7 @@ module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "2.6.0"
 
-  name                 = "test-vpc"
+  name                 = "${local.app_prefix}-vpc"
   cidr                 = "10.0.0.0/16"
   azs                  = data.aws_availability_zones.available.names
   private_subnets      = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
@@ -141,7 +142,6 @@ module "eks" {
   ]
 
   worker_additional_security_group_ids = [aws_security_group.all_worker_mgmt.id]
-  map_roles                            = var.map_roles
-  map_users                            = var.map_users
-  map_accounts                         = var.map_accounts
+  write_aws_auth_config                = var.write_aws_auth_config
+  write_kubeconfig                     = var.write_kubeconfig
 }

@@ -38,16 +38,8 @@ deploy-dev-client: ## Creates the k8s dev cient deployment and service
 
 deploy-dev: local-k8s-context build-dev-images deploy-namespace deploy-data deploy-dev-server deploy-dev-client  ## Creates development-specific deployments and services
 
-create-cluster: ## Creates and configures a cluster on EKS
-	eksctl create cluster \
-	--name prod \
-	--version 1.14 \
-	--nodegroup-name standard-workers \
-	--node-type t3.medium \
-	--nodes 3 \
-	--nodes-min 1 \
-	--nodes-max 4 \
-	--node-ami auto
+deploy-infrastructure: ## Deploys a K8s cluster, nodes, and networking infrastructure to AWS
+	@(cd terraform && terraform apply && CLUSTER=`terraform output cluster_name` && aws eks update-kubeconfig --name $$CLUSTER)
 
 build-server-release-image: ## Builds the release-ready docker image for the server
 	@(docker-compose build --force-rm server-release)
