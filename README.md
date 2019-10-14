@@ -40,12 +40,13 @@ Both the frontend and backend have live-reload enabled.
 
 ### Release Builds
 
-The app is deployed to [AWS EKS](https://aws.amazon.com/eks/).
+The app is deployed to [AWS EKS](https://aws.amazon.com/eks/) via [Terraform](https://www.hashicorp.com/).
 
-To deploy your own cluster, make sure that the AWS CLI is installed,
-then run `make create-cluster` to create a cluster on EKS.
+To ensure that the infrastructure is up to date, run `make deploy-infrastructure`.
+This will make any necessary updates to the EKS cluster and networking, as well as
+ensure that the K8s context is set correctly on the local machine.
 
-For multi-stage release build, run `make deploy-release`.
+To deploy a release version of both the client and server, run `make deploy-release`.
 This will build the release images, push them to Docker Hub, and deploy the Kubernetes infrastructure.
 
 **On a local cluster**
@@ -54,6 +55,11 @@ and the backend is available on [http://localhost:8080](http://localhost:8080).
 
 **On a remote cluster**
 Run `make get-client-host` and `make get-server-host` to get the host names for the client and server respectively.
+
+### Remove Infrastructure State
+
+Terraform state is held in [Terraform Cloud](https://app.terraform.io/app/venturplex/workspaces).
+Ask a manager for access if needed.
 
 ### Troubleshooting
 
