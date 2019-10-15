@@ -11,16 +11,16 @@ pipeline {
         sh "cd client && yarn lint"
       }
     }
-    // stage('Unit Test') {
-    //   steps {
-    //     sh "cd client && yarn test"
-    //   }
-    // }
-    // stage('E2E Testing') {
-    //   steps {
-    //     echo "E2E Testing"
-    //     sh "cd client && yarn e2e"
-    //   }
-    // }
+    stage('Unit Test') {
+      steps {
+        sh "cd client && yarn test"
+      }
+    }
+    stage('E2E Testing') {
+      steps {
+        echo "E2E Testing"
+        sh "cd client && yarn e2e"
+      }
+    }
   }
 }
