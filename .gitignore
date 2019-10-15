@@ -1,5 +1,6 @@
 .vscode
 server/main
+.history/
 
 #  Local .terraform directories
 **/.terraform/*
