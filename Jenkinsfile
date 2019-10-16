@@ -1,25 +1,40 @@
 pipeline {
-  agent any
+  agent {
+    label "jenkins-nodejs"
+  }
   stages {
     stage('Install') {
       steps {
-        sh "cd client && yarn"
+        container('nodejs') {
+          echo 'Upgrading Yarn'
+          sh 'npm config set unsafe-perm true'
+          sh 'npm i -g yarn'
+          sh "make install-node-modules"
+        }
       }
     }
     stage('Lint') {
       steps {
-        sh "cd client && yarn lint"
+        container('nodejs') {
+          echo 'Linting client Application'
+          sh "make lint"
+        }
       }
     }
     stage('Unit Test') {
       steps {
-        sh "cd client && yarn test"
+        container('nodejs') {
+          echo 'Unit Testing'
+          sh "make test"
+        }
       }
     }
     stage('E2E Testing') {
       steps {
-        echo "E2E Testing"
-        sh "cd client && yarn e2e"
+        container('nodejs') {
+          echo "E2E Testing"
+          sh "make e2e"
+        }
       }
     }
   }
