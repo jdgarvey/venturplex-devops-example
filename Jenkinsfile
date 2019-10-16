@@ -1,5 +1,7 @@
 pipeline {
-  agent any
+  agent {
+    label "jenkins-nodejs"
+  }
   stages {
     stage('Install') {
       steps {
