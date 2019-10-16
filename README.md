@@ -111,23 +111,26 @@ build-client-release-image     Builds the release-ready docker image for the cli
 build-dev-images               Builds the docker development images based on docker-compose.yml
 build-local                    Builds a local executable of the project via "go build"
 build-server-release-image     Builds the release-ready docker image for the server
-create-cluster                 Creates and configures a cluster on EKS
 deploy-client-release          Creates the k8s deployment and service for the release version of the client
 deploy-data                    Creates the k8s database deployment and service
 deploy-dev-client              Creates the k8s dev cient deployment and service
 deploy-dev-server              Creates the k8s dev server deployment and service
 deploy-dev                     Creates development-specific deployments and services
+deploy-infrastructure          Deploys a K8s cluster, nodes, and networking infrastructure to AWS
 deploy-namespace               Creates a Kubernetes workspace
 deploy-release                 Builds all images and deploys all k8s infrastructure for a release
 deploy-server-release          Creates the k8s deployment and service for the release version of the server
 destroy-all-k8s                Deletes the local Kubernetes architecture
+e2e                            Runs E2E tests for the Angular projects
 get-client-hostname            Retrieve the external IP for the client application
 get-server-hostname            Retrieve the external IP for the server application
 help                           Help documentation
 init                           Install required tools for local environment on macOS
 install-node-modules           Install dependencies locally
+lint                           Lints the Angular projects
 local-k8s-context              Ensures that the K8s context is set to Docker for Desktop
 push-client-release            Push the built client-release image to Docker Hub
 push-server-release            Push the built server-release image to Docker Hub
 start-local                    Builds and starts a local version of the program
+test                           Unit tests the Angular projects
 ```
