@@ -22,5 +22,10 @@ pipeline {
         sh "cd client && yarn e2e"
       }
     }
+    stage('Build Local') {
+      steps {
+        sh "make deploy-dev"
+      }
+    }
   }
 }
