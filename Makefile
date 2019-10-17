@@ -69,3 +69,8 @@ get-client-hostname: ## Retrieve the external IP for the client application
 
 destroy-all-k8s: ## Deletes the local Kubernetes architecture
 	@(kubectl delete -f ./kubernetes)
+
+deploy-local-frontend: ## Build and copy over to s3 bucket
+	BUCKET=`(cd terraform && terraform output bucket_domain_name)` && \
+	cd client && yarn build --prod && \
+	aws s3 cp ./dist/apps/users s3://$$BUCKET --recursive --acl public-read

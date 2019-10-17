@@ -1,5 +1,16 @@
+variable "AWS_ACCESS_KEY" {}
+variable "AWS_SECRET_KEY" {}
+
 variable "region" {
-  default = "us-west-2"
+  default = "us-east-1"
+}
+
+variable "root_domain_name" {
+  default = "engenioussolutions.io"
+}
+
+variable "domain_name" {
+  default = "shutterfly-devops.engenioussolutions.io"
 }
 
 variable "write_aws_auth_config" {

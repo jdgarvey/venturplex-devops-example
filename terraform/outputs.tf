@@ -1,3 +1,8 @@
+output "bucket_domain_name" {
+  value       = aws_s3_bucket.shutterfly_bucket.bucket
+  description = "Bucket Name"
+}
+
 output "cluster_endpoint" {
   description = "Endpoint for EKS control plane."
   value       = module.eks.cluster_endpoint
