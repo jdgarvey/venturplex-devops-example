@@ -1,8 +1,6 @@
-ARG NODE_VERSION=12-alpine
-FROM node:${NODE_VERSION}
-
-EXPOSE 4200
-
+FROM node:9-slim
+ENV PORT 8080
+EXPOSE 8080
+WORKDIR /usr/src/app
 COPY . .
-
 CMD ["npm", "start"]
