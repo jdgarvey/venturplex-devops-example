@@ -6,7 +6,7 @@ build:
       template: '{{.DOCKER_REGISTRY}}/{{.IMAGE_NAME}}:{{.VERSION}}'
   artifacts:
   - image: jdgarvey/hello-shutterfly
-    context: .
+    context: ./client
     docker: {}
   local: {}
 deploy:
