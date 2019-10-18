@@ -1,18 +1,7 @@
-ARG NODE_VERSION=12-alpine
-FROM node:${NODE_VERSION}
-
-WORKDIR /app/
-
-EXPOSE 4200
-
-RUN apk add --no-cache \
-  bash \
-  git
-
-COPY package.json .
-
-RUN yarn
-
+FROM node:12-alpine
+ENV PORT 8080
+EXPOSE 8080
+WORKDIR /usr/src/app
 COPY . .
-
-CMD ["yarn", "start"]
+RUN ls
+CMD ["npm", "start"]

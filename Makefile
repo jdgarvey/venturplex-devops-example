@@ -11,6 +11,15 @@ init: ## Install required tools for local environment on macOS
 	brew install awscli || exit 0
 	brew tap weaveworks/tap && brew install weaveworks/tap/eksctl || exit 0
 
+lint: ## Lints the Angular projects
+	@(cd client && yarn lint)
+
+test: ## Unit tests the Angular projects
+	@(cd client && yarn test)
+
+e2e: ## Runs E2E tests for the Angular projects
+	@(cd client && yarn e2e)
+
 build-local: ## Builds a local executable of the project via "go build"
 	@(cd server && go build)
 
