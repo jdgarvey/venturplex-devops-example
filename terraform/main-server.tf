@@ -119,3 +119,78 @@ module "eks" {
   write_aws_auth_config                = var.write_aws_auth_config
   write_kubeconfig                     = var.write_kubeconfig
 }
+
+resource "aws_elb" "main" {
+  name               = "vp-devops-example-mT6TQGF9"
+  availability_zones = ["us-east-1c"]
+
+  listener {
+    instance_port      = 8080
+    instance_protocol  = "http"
+    lb_port            = 80
+    lb_protocol        = "https"
+    ssl_certificate_id = aws_acm_certificate.certificate.arn
+  }
+}
+
+// Cloudfront Distribution
+resource "aws_cloudfront_distribution" "shutterfly_server_distribution" {
+  origin {
+    custom_origin_config {
+      http_port              = "8080"
+      https_port             = "443"
+      origin_protocol_policy = "http-only"
+      origin_ssl_protocols   = ["TLSv1", "TLSv1.1", "TLSv1.2"]
+    }
+
+    domain_name = "ab98cfc43f11411e985010246b4aba3b-116801326.us-east-1.elb.amazonaws.com"
+    origin_id   = "server-${var.domain_name}"
+  }
+
+  enabled              = true
+  default_root_object  = "index.html"
+
+  default_cache_behavior {
+    viewer_protocol_policy = "redirect-to-https"
+    compress               = true
+    allowed_methods        = ["GET", "PUT", "PATCH", "POST", "HEAD", "DELETE", "OPTIONS"]
+    cached_methods         = ["GET", "HEAD"]
+    target_origin_id       = "server-${var.domain_name}"
+    min_ttl                = 0
+    default_ttl            = 86400
+    max_ttl                = 31536000
+
+    forwarded_values {
+      query_string = false
+      cookies {
+        forward = "none"
+      }
+    }
+  }
+
+  aliases = ["server-${var.domain_name}"]
+
+  restrictions {
+    geo_restriction {
+      restriction_type = "none"
+    }
+  }
+
+  viewer_certificate {
+    acm_certificate_arn      = aws_acm_certificate.certificate.arn
+    minimum_protocol_version = "TLSv1"
+    ssl_support_method       = "sni-only"
+  }
+}
+
+resource "aws_route53_record" "shutterfly_devops_server" {
+  zone_id = data.aws_route53_zone.zone.zone_id
+  name    = "server-${var.domain_name}"
+  type    = "A"
+
+  alias {
+    name                   = aws_cloudfront_distribution.shutterfly_server_distribution.domain_name
+    zone_id                = aws_cloudfront_distribution.shutterfly_server_distribution.hosted_zone_id
+    evaluate_target_health = false
+  }
+}

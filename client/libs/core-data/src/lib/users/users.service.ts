@@ -7,7 +7,8 @@ import { Observable } from 'rxjs';
 
 import { User } from './user.model';
 
-const BASE_URL = `${process.env.ENDPOINT}:8080/api/v1`;
+// const BASE_URL = `${process.env.ENDPOINT}:8080/api/v1`;
+const BASE_URL = 'https://server-shutterfly-devops.engenioussolutions.io/api/v1';
 const model = 'users';
 
 @Injectable({
